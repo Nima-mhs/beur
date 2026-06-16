@@ -1,0 +1,320 @@
+{
+  "meta": {
+    "title": "BEUR SEASON — Data-Driven Beauty Consulting",
+    "description": "The first Persian-speaking, data-driven beauty consultancy. Color-cycle and skin-tone analysis so every beauty choice is built precisely for your unique color season."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "consultation": "Consultation",
+    "colorAnalysis": "Color Analysis",
+    "login": "Log in",
+    "book": "Book a consultation",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "brand": {
+    "name": "BEUR SEASON",
+    "tagline": "Beauty Your Season",
+    "taglineFa": "فصل رنگی تو، زیبایی توست"
+  },
+  "hero": {
+    "eyebrow": "Color Science · Data-Driven",
+    "titleLine1": "Your beauty,",
+    "titleLine2": "backed by color science.",
+    "subtitle": "Every beauty decision grounded in knowledge, data and color science — from color-cycle analysis to a precise match with your skin tone. So no shade ever looks 'off' on you again.",
+    "ctaPrimary": "Book a consultation",
+    "ctaSecondary": "See services",
+    "stat1Value": "4 Seasons",
+    "stat1Label": "Color Season",
+    "stat2Value": "Undertone",
+    "stat2Label": "Skin tone analysis",
+    "stat3Value": "100%",
+    "stat3Label": "Personalized"
+  },
+  "values": {
+    "eyebrow": "Our values",
+    "title": "Why BEUR SEASON",
+    "subtitle": "We're not a product seller or a trend-chasing blogger — we're a scientific reference for skin color analysis.",
+    "items": [
+      {
+        "title": "Science-led",
+        "desc": "Every recommendation is backed by data and research, not personal taste."
+      },
+      {
+        "title": "Honest by craft",
+        "desc": "We tell you what truly suits you — not what you'd like to hear."
+      },
+      {
+        "title": "Trust-first",
+        "desc": "Full transparency in methods and sources. You know why this color, for you."
+      },
+      {
+        "title": "Empowering",
+        "desc": "Our goal is to make you capable — never dependent."
+      }
+    ]
+  },
+  "servicesPreview": {
+    "eyebrow": "Services",
+    "title": "Where to begin",
+    "subtitle": "Start with a private consultation. More services are coming soon.",
+    "consultation": {
+      "tag": "Most popular",
+      "title": "Personal Color Consultation",
+      "desc": "A private online session to discover your color season, skin undertone and bespoke palette.",
+      "features": [
+        "Undertone & Color Season analysis",
+        "A personal palette for makeup, hair and clothing",
+        "Live video session with real-time Q&A"
+      ],
+      "cta": "Book & pay"
+    },
+    "soon": {
+      "title": "Webinars & online classes",
+      "desc": "Professional Color Analysis training for experts and salons.",
+      "badge": "Coming soon"
+    }
+  },
+  "positioning": {
+    "eyebrow": "Our position",
+    "statement": "The only Persian-speaking beauty consultant who builds your personal palette with the science of the color cycle and Color Season.",
+    "uvp": "For beauty seekers and professionals who want smart beauty decisions — where color science and beauty meet."
+  },
+  "aboutTeaser": {
+    "eyebrow": "About me",
+    "title": "An expert who tells the truth",
+    "body": "Using color science and data-driven analysis, I help you choose colors truly made for you — not what merely looked good on someone else. My full story and résumé will live here soon.",
+    "cta": "Learn more"
+  },
+  "ctaBanner": {
+    "title": "Discover your color season",
+    "subtitle": "Book your private consultation today.",
+    "cta": "Book a consultation"
+  },
+  "footer": {
+    "tagline": "Data-driven beauty consulting · Persian-speaking",
+    "navTitle": "Navigation",
+    "contactTitle": "Contact",
+    "followTitle": "Follow us",
+    "email": "info@beurseason.com",
+    "rights": "All rights reserved.",
+    "builtNote": "Built on color science."
+  },
+  "about": {
+    "eyebrow": "About me",
+    "title": "Meet your consultant",
+    "intro": "This page will soon be completed with a photo, story and full résumé. For now, it's a placeholder.",
+    "placeholderTitle": "What will live here?",
+    "placeholderItems": [
+      "Professional photo and a short introduction",
+      "Expertise path and Color Analysis certifications",
+      "Work philosophy: color science, honesty, empowerment"
+    ],
+    "missionTitle": "My mission",
+    "mission": "To empower individuals and beauty businesses through data-driven analysis and expert consulting — so every choice is smart, informed and effective.",
+    "cta": "Book a consultation"
+  },
+  "servicesPage": {
+    "eyebrow": "Services",
+    "title": "BEUR SEASON Services",
+    "subtitle": "Start with a personal consultation; more specialized services are on the way.",
+    "available": "Available",
+    "comingSoon": "Coming soon",
+    "items": [
+      {
+        "title": "Personal Color Consultation",
+        "desc": "A private online session to discover your color season, skin undertone and bespoke palette.",
+        "cta": "Book & pay",
+        "status": "available"
+      },
+      {
+        "title": "Webinars & online classes",
+        "desc": "Color Analysis courses for enthusiasts and professionals.",
+        "cta": "Notify me",
+        "status": "soon"
+      },
+      {
+        "title": "B2B for salons & brands",
+        "desc": "Team training, consulting tools and a professional color guide for businesses.",
+        "cta": "Contact us",
+        "status": "soon"
+      }
+    ]
+  },
+  "colorDemo": {
+    "eyebrow": "AI-Powered Color Analysis",
+    "title": "Discover Your Color Season",
+    "subtitle": "Upload a simple photo and our AI identifies your color season, then recommends the perfect hair, brow and makeup shades.",
+    "cta": "Try Free Color Analysis",
+    "spring": "Spring",
+    "summer": "Summer",
+    "autumn": "Autumn",
+    "winter": "Winter",
+    "springDesc": "Warm · Light · Vivid",
+    "summerDesc": "Cool · Soft · Delicate",
+    "autumnDesc": "Warm · Deep · Earthy",
+    "winterDesc": "Cool · Dark · Clear",
+    "badge": "New"
+  },
+  "colorAnalysis": {
+    "title": "AI Color Analysis",
+    "subtitle": "Upload your face photo to discover your color season and the best hair, brow and makeup shades for you.",
+    "uploadTitle": "Drop your photo here or click to browse",
+    "uploadSubtitle": "JPG, PNG or WEBP · Max 10 MB",
+    "uploadBtn": "Choose photo",
+    "analyzeBtn": "Analyze my colors",
+    "analyzing": "Analyzing your colors...",
+    "analyzingDesc": "AI is examining your photo",
+    "resultTitle": "Your Personal Color Analysis",
+    "season": "Color Season",
+    "undertone": "Skin Undertone",
+    "skinTone": "Skin Tone",
+    "hairColors": "Recommended Hair Colors",
+    "eyebrowColors": "Recommended Brow Colors",
+    "makeup": "Recommended Makeup",
+    "foundation": "Foundation",
+    "blush": "Blush",
+    "lipstick": "Lipstick",
+    "eyeshadow": "Eyeshadow",
+    "avoidColors": "Colors to Avoid",
+    "emailLabel": "Email to receive your report",
+    "emailPlaceholder": "email@example.com",
+    "emailBtn": "Send report to email",
+    "emailSent": "Report sent to your email!",
+    "tryAgain": "Analyze again",
+    "bookConsult": "Book a personal consultation",
+    "disclaimer": "This analysis is AI-generated. For a more precise result, we recommend a personal consultation.",
+    "warm": "Warm",
+    "cool": "Cool",
+    "neutral": "Neutral",
+    "demoNote": "Demo result — set your API key for real analysis",
+    "cameraBtn": "Take Photo",
+    "cameraStop": "Stop Camera",
+    "cameraCapture": "Capture",
+    "orTakePhoto": "Or take a photo with your camera",
+    "photoTipsTitle": "For a more accurate analysis, follow these tips:",
+    "photoTip1": "Natural daylight on your face — no flash or artificial light",
+    "photoTip2": "Pull hair back so your face is fully visible",
+    "photoTip3": "Light or no makeup — to reveal your true skin tone",
+    "photoTip4": "Remove glasses",
+    "photoTip5": "Straight front-facing shot at a comfortable distance"
+  },
+  "chatbot": {
+    "title": "Color Consultant",
+    "subtitle": "BEUR SEASON",
+    "placeholder": "Ask a color question...",
+    "send": "Send",
+    "welcome": "Hello! I'm BEUR SEASON's AI color consultant. Ask me anything about color seasons, skin undertones, or the best hair and makeup shades for you!"
+  },
+  "consultationPage": {
+    "eyebrow": "Personal Color Consultation",
+    "title": "Book your consultation",
+    "subtitle": "A private online video session, tailored entirely to your skin and hair.",
+    "whatYouGet": "What you get",
+    "features": [
+      "Precise Undertone analysis (warm/cool)",
+      "Your Color Season among Spring / Summer / Autumn / Winter",
+      "A personal palette for makeup, hair color and clothing",
+      "Live Q&A and a practical guide"
+    ],
+    "howTitle": "How it works",
+    "steps": [
+      { "title": "Sign up", "desc": "Create an account or log in." },
+      { "title": "Pick a time", "desc": "Choose an open slot from the calendar." },
+      { "title": "Pay", "desc": "Pay via an Iranian or international gateway." },
+      { "title": "Online session", "desc": "Your meeting link will be sent to you." }
+    ],
+    "bookingTitle": "Book & pay",
+    "bookingPlaceholder": "The booking and payment system goes live in the next phase (Supabase, Zarinpal and Stripe integration). This section is coming soon.",
+    "bookingTitle": "Book & Pay",
+    "bookingSubtitle": "Click below to choose a time slot and complete your booking. After payment, your session link will be emailed to you.",
+    "bookCta": "Book a consultation",
+    "notifyCta": "Contact us"
+  },
+  "auth": {
+    "loginTitle": "Sign in to your account",
+    "loginSubtitle": "Sign in to book a consultation.",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Sign in",
+    "loggingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Create one",
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Sign up to book your consultation.",
+    "fullName": "Full name",
+    "phone": "Mobile number (optional)",
+    "passwordConfirm": "Confirm password",
+    "registerBtn": "Create account",
+    "registering": "Creating account...",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Sign in",
+    "checkEmail": "Confirmation email sent. Please check your inbox.",
+    "logout": "Sign out",
+    "myAccount": "My account",
+    "passwordMismatch": "Passwords do not match.",
+    "error": "Something went wrong. Please try again."
+  },
+  "booking": {
+    "title": "Book a Consultation",
+    "subtitle": "Choose a convenient time and book your session.",
+    "step1Label": "Choose Time",
+    "step2Label": "Your Details",
+    "step3Label": "Payment",
+    "step4Label": "Confirmed",
+    "chooseSlotTitle": "Select a time for your consultation",
+    "noSlots": "No available slots at the moment.",
+    "contactForBooking": "Contact us to book manually",
+    "slotDuration": "60 min · Online",
+    "selectSlot": "Select this time",
+    "detailsTitle": "Enter your details",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Mobile number",
+    "notes": "Message or question (optional)",
+    "next": "Continue",
+    "back": "Back",
+    "paymentTitle": "Payment details",
+    "paymentSubtitle": "Transfer the amount below to the bank account shown.",
+    "paymentAmount": "Amount: 500,000 IRT",
+    "bankName": "Bank Mellat",
+    "cardNumber": "Card: 6104-3372-0000-0000",
+    "accountHolder": "Account holder: BEUR SEASON",
+    "paymentReceiptNote": "After transferring, enter your transaction ID in the notes field.",
+    "iHavePaid": "I've paid — confirm my booking",
+    "submitting": "Saving your booking...",
+    "successTitle": "Your booking is confirmed!",
+    "successDesc": "Once your payment is verified, your online session link will be emailed to you.",
+    "myBookings": "View my bookings",
+    "backToHome": "Back to home",
+    "loginRequired": "Please sign in to book a consultation.",
+    "loginToBook": "Sign in / Register to book",
+    "service": "Personal Color Consultation",
+    "selectedTime": "Selected time"
+  },
+  "dashboard": {
+    "title": "My Account",
+    "subtitle": "Your bookings",
+    "noBookings": "You have no bookings yet.",
+    "bookNow": "Book a consultation",
+    "bookingId": "Booking ID",
+    "service": "Service",
+    "sessionTime": "Session time",
+    "bookedAt": "Booked on",
+    "status": "Status",
+    "statusPending": "Awaiting confirmation",
+    "statusPendingPayment": "Awaiting payment verification",
+    "statusConfirmed": "Confirmed ✓",
+    "statusCancelled": "Cancelled",
+    "cancelBtn": "Cancel booking",
+    "cancelConfirmMsg": "Are you sure you want to cancel this booking?",
+    "cancelYes": "Yes, cancel",
+    "cancelNo": "No, go back",
+    "cancelSuccess": "Booking cancelled successfully.",
+    "loading": "Loading...",
+    "logout": "Sign out",
+    "userEmail": "Your email"
+  }
+}

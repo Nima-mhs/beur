@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #b29560; /* page background — Dark Gold */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: #000000;
+    font-family: var(--font-vazir), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings use the luxe display face for Latin, Vazir for Persian */
+  h1, h2, h3 {
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  ::selection {
+    background-color: #000000;
+    color: #c9a96e;
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8;
+  }
+
+  .label-eyebrow {
+    @apply inline-block text-[11px] font-medium uppercase tracking-label text-charcoal;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-gold hover:bg-charcoal hover:text-sand shadow-luxe;
+  }
+
+  .btn-secondary {
+    @apply btn border border-ink/70 text-ink hover:bg-ink hover:text-gold;
+  }
+
+  .btn-ghost {
+    @apply btn text-ink hover:text-charcoal;
+  }
+
+  .surface-card {
+    @apply rounded-2xl bg-sand text-ink shadow-card;
+  }
+
+  .surface-dark {
+    @apply rounded-2xl bg-ink text-sand shadow-luxe;
+  }
+
+  .link-accent {
+    @apply text-ink underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-charcoal;
+  }
+}
+
+/* Logo ring mark */
+.logo-ring {
+  border: 1.5px solid currentColor;
+  border-radius: 9999px;
+}

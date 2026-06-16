@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "beur-season",
+      "runtimeExecutable": "C:\\Users\\ASUS\\AppData\\Local\\nodejs-portable\\node-v22.11.0-win-x64\\node.exe",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev"],
+      "port": 3000
+    }
+  ]
+}
