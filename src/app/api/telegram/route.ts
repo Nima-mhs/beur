@@ -17,15 +17,6 @@ async function sendTelegramMessage(chatId: number | string, text: string) {
 }
 
 export async function POST(req: NextRequest) {
-  // Validate webhook secret set in @BotFather or via setWebhook
-  const secret = req.headers.get("x-telegram-bot-api-secret-token");
-  if (
-    process.env.TELEGRAM_WEBHOOK_SECRET &&
-    secret !== process.env.TELEGRAM_WEBHOOK_SECRET
-  ) {
-    return NextResponse.json({ ok: false }, { status: 401 });
-  }
-
   const update = await req.json();
   const msg = update.message ?? update.edited_message;
 
