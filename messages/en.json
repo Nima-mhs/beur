@@ -202,11 +202,21 @@
     "photoTip5": "Straight front-facing shot at a comfortable distance"
   },
   "chatbot": {
-    "title": "Color Consultant",
+    "title": "AI Assistant",
     "subtitle": "BEUR SEASON",
-    "placeholder": "Ask a color question...",
+    "placeholder": "Ask anything...",
     "send": "Send",
-    "welcome": "Hello! I'm BEUR SEASON's AI color consultant. Ask me anything about color seasons, skin undertones, or the best hair and makeup shades for you!"
+    "welcome": "Hello! I'm BEUR SEASON's AI assistant 🌸 I can help with color seasons, booking a consultation, pricing, and more!"
+  },
+  "chatPage": {
+    "title": "Chat with AI Assistant",
+    "description": "BEUR SEASON's AI assistant is ready to answer your questions.",
+    "backHome": "Home",
+    "online": "Online",
+    "assistant": "AI Assistant",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "disclaimer": "Responses may contain errors"
   },
   "consultationPage": {
     "eyebrow": "Personal Color Consultation",
