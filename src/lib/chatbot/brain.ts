@@ -15,30 +15,50 @@ function isCreditError(e: unknown): boolean {
   );
 }
 
+const FREE_MODELS = [
+  "google/gemma-2-9b-it:free",
+  "meta-llama/llama-3.2-3b-instruct:free",
+  "microsoft/phi-3-mini-128k-instruct:free",
+];
+
 async function chatWithOpenRouter(
   systemPrompt: string,
   messages: ChatMessage[]
 ): Promise<string> {
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://beurseason.com",
-      "X-Title": "BEUR SEASON Chatbot",
-    },
-    body: JSON.stringify({
-      model: "google/gemma-4-31b-it:free",
-      max_tokens: 1024,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...messages,
-      ],
-    }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || `OpenRouter ${res.status}`);
-  return data.choices?.[0]?.message?.content ?? "";
+  const key = process.env.OPENROUTER_API_KEY;
+  if (!key) throw new Error("No OpenRouter key");
+
+  for (const model of FREE_MODELS) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://beur-yd3c.vercel.app",
+          "X-Title": "BEUR SEASON Chatbot",
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: 800,
+          messages: [
+            { role: "system", content: systemPrompt },
+            ...messages,
+          ],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.error(`OpenRouter ${model} failed:`, data.error?.message);
+        continue;
+      }
+      const text = data.choices?.[0]?.message?.content ?? "";
+      if (text) return text;
+    } catch (err) {
+      console.error(`OpenRouter ${model} error:`, err);
+    }
+  }
+  throw new Error("All OpenRouter models failed");
 }
 
 const SYSTEM_PROMPT = `تو یک دستیار هوشمند فارسی‌زبان برای مجموعه BEUR SEASON هستی — اولین سرویس مشاوره زیبایی داده‌محور فارسی‌زبان.
