@@ -98,7 +98,10 @@ export function AdminClient() {
       if (!user) { router.push("/auth/login"); return; }
 
       // Check admin role via API (uses service client, bypasses RLS)
-      const meRes = await fetch("/api/me");
+      const { data: { session } } = await supabase.auth.getSession();
+      const meRes = await fetch("/api/me", {
+        headers: { Authorization: `Bearer ${session?.access_token ?? ""}` },
+      });
       const meJson = await meRes.json();
 
       if (meJson.role !== "admin") {

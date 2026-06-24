@@ -28,7 +28,10 @@ export function Navbar() {
     supabase.auth.getUser().then(async ({ data }) => {
       if (data.user) {
         setUser({ email: data.user.email });
-        const res = await fetch("/api/me");
+        const { data: { session } } = await supabase.auth.getSession();
+        const res = await fetch("/api/me", {
+          headers: { Authorization: `Bearer ${session?.access_token ?? ""}` },
+        });
         const json = await res.json();
         setIsAdmin(json.role === "admin");
       } else {
