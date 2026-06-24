@@ -21,11 +21,19 @@ export function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<{ email?: string } | null | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user ? { email: data.user.email } : null);
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user) {
+        setUser({ email: data.user.email });
+        const { data: profile } = await supabase
+          .from("profiles").select("role").eq("id", data.user.id).single();
+        setIsAdmin(profile?.role === "admin");
+      } else {
+        setUser(null);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -70,6 +78,11 @@ export function Navbar() {
 
           {user === undefined ? null : user ? (
             <div className="flex items-center gap-3">
+              {isAdmin && (
+                <Link href="/admin" className="btn-ghost !px-3 !py-2 text-sm text-gold">
+                  ادمین
+                </Link>
+              )}
               <Link href="/dashboard" className="btn-secondary !px-4 !py-2 text-sm">
                 {tAuth("myAccount")}
               </Link>
