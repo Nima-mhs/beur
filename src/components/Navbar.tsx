@@ -28,9 +28,9 @@ export function Navbar() {
     supabase.auth.getUser().then(async ({ data }) => {
       if (data.user) {
         setUser({ email: data.user.email });
-        const { data: profile } = await supabase
-          .from("profiles").select("role").eq("id", data.user.id).single();
-        setIsAdmin(profile?.role === "admin");
+        const res = await fetch("/api/me");
+        const json = await res.json();
+        setIsAdmin(json.role === "admin");
       } else {
         setUser(null);
       }

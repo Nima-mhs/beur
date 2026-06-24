@@ -97,14 +97,11 @@ export function AdminClient() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth/login"); return; }
 
-      // Check admin role directly from Supabase client
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+      // Check admin role via API (uses service client, bypasses RLS)
+      const meRes = await fetch("/api/me");
+      const meJson = await meRes.json();
 
-      if (profile?.role !== "admin") {
+      if (meJson.role !== "admin") {
         setAuthorized(false);
         return;
       }
