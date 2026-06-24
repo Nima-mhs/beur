@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServiceClient } from "@/lib/supabase/service";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 export async function GET(request: NextRequest) {
@@ -8,15 +7,17 @@ export async function GET(request: NextRequest) {
 
   const token = authHeader.replace("Bearer ", "");
 
-  // Verify token using Supabase auth
+  // Use token to create authenticated client — this bypasses RLS correctly
   const supabase = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { global: { headers: { Authorization: `Bearer ${token}` } } }
   );
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return NextResponse.json({ role: null });
 
-  const { data: profile } = await getServiceClient()
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ role: null });
+
+  const { data: profile } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
