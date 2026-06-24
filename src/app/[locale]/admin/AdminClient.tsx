@@ -97,14 +97,24 @@ export function AdminClient() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth/login"); return; }
 
-      const res = await fetch("/api/admin/bookings");
-      if (res.status === 403) {
+      // Check admin role directly from Supabase client
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role !== "admin") {
         setAuthorized(false);
         return;
       }
+
       setAuthorized(true);
-      const data = await res.json();
-      setBookings(data.bookings ?? []);
+      const res = await fetch("/api/admin/bookings");
+      if (res.ok) {
+        const data = await res.json();
+        setBookings(data.bookings ?? []);
+      }
     }
     check();
   // eslint-disable-next-line react-hooks/exhaustive-deps

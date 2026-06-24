@@ -6,12 +6,25 @@ async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
-  const { data: profile } = await getServiceClient()
+
+  // Try server client first, fallback to service client
+  const db = getServiceClient();
+  const { data: profile } = await db
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
-  return profile?.role === "admin" ? user : null;
+
+  if (profile?.role === "admin") return user;
+
+  // Fallback: check via anon client
+  const { data: profile2 } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  return profile2?.role === "admin" ? user : null;
 }
 
 export async function GET() {

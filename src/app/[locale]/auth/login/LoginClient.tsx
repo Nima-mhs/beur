@@ -6,6 +6,48 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/Logo";
 
+function ForgotPasswordLink() {
+  const supabase = createClient();
+  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState("");
+  const [show, setShow] = useState(false);
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault();
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    });
+    setSent(true);
+  }
+
+  if (!show) {
+    return (
+      <button type="button" onClick={() => setShow(true)} className="text-xs link-accent">
+        فراموشی رمز؟
+      </button>
+    );
+  }
+
+  if (sent) {
+    return <span className="text-xs text-green-600">لینک به ایمیل ارسال شد ✓</span>;
+  }
+
+  return (
+    <form onSubmit={handleForgot} className="flex gap-1 items-center">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="ایمیل شما"
+        required
+        dir="ltr"
+        className="rounded-lg border border-sand bg-paper px-2 py-1 text-xs text-ink outline-none focus:ring-1 focus:ring-gold/40 w-36"
+      />
+      <button type="submit" className="text-xs link-accent">ارسال</button>
+    </form>
+  );
+}
+
 export function LoginClient() {
   const t = useTranslations("auth");
   const locale = useLocale();
@@ -61,7 +103,10 @@ export function LoginClient() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-charcoal mb-1">{t("password")}</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-charcoal">{t("password")}</label>
+              <ForgotPasswordLink />
+            </div>
             <input
               type="password"
               value={password}
