@@ -18,10 +18,12 @@ export default function DebugPage() {
       }
 
       const token = sessionData.session?.access_token ?? "";
-      const res = await fetch("/api/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const meJson = await res.json();
+      const [meRes, debugRes] = await Promise.all([
+        fetch("/api/me", { headers: { Authorization: `Bearer ${token}` } }),
+        fetch("/api/debug-me", { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+      const meJson = await meRes.json();
+      const debugJson = await debugRes.json();
 
       setInfo({
         status: "LOGGED IN",
@@ -31,6 +33,7 @@ export default function DebugPage() {
         tokenLength: token.length,
         apiMeResponse: meJson,
         isAdmin: meJson.role === "admin",
+        debugMe: debugJson,
       });
     }
     run();
