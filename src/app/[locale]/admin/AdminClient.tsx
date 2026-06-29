@@ -217,8 +217,19 @@ export function AdminClient() {
   return (
     <div className="min-h-screen">
       <section className="container-content py-10">
-        <h1 className="text-3xl font-display text-ink mb-2">پنل ادمین</h1>
-        <p className="text-sm text-charcoal/60">مدیریت رزروها، زمان‌ها و لیدها</p>
+        <div className="flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-3xl font-display text-ink mb-2">پنل ادمین</h1>
+            <p className="text-sm text-charcoal/60">مدیریت رزروها، زمان‌ها و لیدها</p>
+          </div>
+          <a
+            href="/fa/admin/chatbot"
+            className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5"
+          >
+            <span>🤖</span>
+            <span>پنل مدیریت چت‌بات</span>
+          </a>
+        </div>
       </section>
 
       {/* Tab bar */}
