@@ -4,7 +4,13 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = { poll: 1000, aggregateTimeout: 300 };
+    }
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
