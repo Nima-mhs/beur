@@ -189,7 +189,7 @@ export function ColorAnalysisDemo() {
                   }}
                 >
                   {/* Portrait image */}
-                  <div style={{ height: 140, overflow: "hidden" }}>
+                  <div style={{ aspectRatio: "16/9", overflow: "hidden" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={s.image}
