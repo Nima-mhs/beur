@@ -189,12 +189,12 @@ export function ColorAnalysisDemo() {
                   }}
                 >
                   {/* Portrait image */}
-                  <div style={{ height: 120, overflow: "hidden" }}>
+                  <div style={{ height: 140, overflow: "hidden" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={s.image}
                       alt={t(s.key)}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", display: "block" }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
                     />
                   </div>
                   {/* Gradient */}
