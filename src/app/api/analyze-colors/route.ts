@@ -325,10 +325,7 @@ export async function POST(request: NextRequest) {
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         console.error("Claude failed:", msg);
-        if (!isCreditError(msg)) {
-          return NextResponse.json({ error: "Analysis failed." }, { status: 500 });
-        }
-        console.log("Claude credits low — trying OpenRouter...");
+        console.log("Claude failed — trying OpenRouter...");
       }
     }
 
