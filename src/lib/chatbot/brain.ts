@@ -54,7 +54,7 @@ async function loadModelConfig(channel: string): Promise<ModelCfg> {
   if (cached && Date.now() - cached.ts < CFG_TTL) return cached.cfg;
 
   const DEFAULT: ModelCfg = {
-    active_model: "anthropic/claude-haiku-4-5-20251001",
+    active_model: "anthropic/claude-haiku-4.5",
     temperature: 0.7,
     max_tokens: 1024,
     top_p: 1.0,
