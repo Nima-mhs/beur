@@ -102,7 +102,7 @@ interface FeedbackItem {
 // ─── Model catalog (OpenRouter slugs) ─────────────────────────────────────────
 
 const MODEL_OPTIONS = [
-  { group: "Anthropic (Claude)", slug: "anthropic/claude-haiku-4-5-20251001", label: "Claude Haiku 4.5 — سریع، مودب، ارزان" },
+  { group: "Anthropic (Claude)", slug: "anthropic/claude-haiku-4.5", label: "Claude Haiku 4.5 — سریع، مودب، ارزان" },
   { group: "Anthropic (Claude)", slug: "anthropic/claude-sonnet-4-5",         label: "Claude Sonnet 4.5 — قوی‌تر" },
   { group: "Google (Gemini)",    slug: "google/gemini-2.5-flash",              label: "Gemini 2.5 Flash — ارزان، context بزرگ" },
   { group: "Google (Gemini)",    slug: "google/gemini-2.5-flash-lite",         label: "Gemini 2.5 Flash Lite — سریع‌ترین" },
@@ -731,7 +731,7 @@ function ModelsTab({ auth }: { auth: string }) {
   const defaultCfg = (channel: string): ModelConfig => ({
     channel,
     provider: "anthropic",
-    active_model: "anthropic/claude-haiku-4-5-20251001",
+    active_model: "anthropic/claude-haiku-4.5",
     temperature: 0.7,
     max_tokens: 1024,
     top_p: 1.0,
@@ -1416,7 +1416,7 @@ function ChannelsTab({ auth }: { auth: string }) {
 
 function PlaygroundTab({ auth }: { auth: string }) {
   const [query, setQuery]   = useState("");
-  const [modelA, setModelA] = useState("anthropic/claude-haiku-4-5-20251001");
+  const [modelA, setModelA] = useState("anthropic/claude-haiku-4.5");
   const [modelB, setModelB] = useState("google/gemini-2.5-flash");
   const [topK, setTopK]     = useState(5);
   const [threshold, setThreshold] = useState(0.5);
