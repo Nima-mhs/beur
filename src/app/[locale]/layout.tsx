@@ -40,6 +40,9 @@ export async function generateMetadata({
     title: t("title"),
     description: t("description"),
     icons: { icon: "/favicon.svg" },
+    verification: {
+      google: "7tFHAMHMRGdDE85YBPiNfU2qJfL-h6B39Fki7dYRFV8",
+    },
     alternates: {
       canonical: `/${locale}`,
       languages: {
