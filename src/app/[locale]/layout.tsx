@@ -33,10 +33,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://beur.vercel.app").replace(/\/$/, "");
+
   return {
+    metadataBase: new URL(siteUrl),
     title: t("title"),
     description: t("description"),
     icons: { icon: "/favicon.svg" },
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        fa: "/fa",
+        en: "/en",
+      },
+    },
   };
 }
 
