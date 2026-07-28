@@ -19,8 +19,11 @@ cd "C:\Users\ASUS\OneDrive\Desktop\beur"
 | Production build | `npm run build` |
 | Type-check / lint | `npm run lint` |
 | Clear cache & restart | `rmdir /s /q .next` then `npx next dev` |
+| Deploy to production | `npx vercel --prod --yes` (project already linked via `.vercel/project.json`) |
 
 There are no automated tests in this project.
+
+The project directory lives inside OneDrive sync, so `next.config.mjs` forces webpack polling (`watchOptions.poll`) in dev — native filesystem watch events are unreliable under OneDrive and hot reload silently stops working without it.
 
 ## Architecture
 
@@ -28,7 +31,7 @@ There are no automated tests in this project.
 
 ### Routing & i18n
 
-- `src/middleware.ts` — intercepts all non-asset requests, redirects/rewrites to the correct locale prefix.
+- `src/middleware.ts` — intercepts all non-asset requests, redirects/rewrites to the correct locale prefix, **and** refreshes the Supabase auth session (`supabase.auth.getUser()`) on every matched request so cookies stay valid across navigations.
 - `src/i18n/routing.ts` — defines `locales: ["fa", "en"]`, `defaultLocale: "fa"`.
 - `messages/fa.json` and `messages/en.json` — **single source of all UI strings**. Every page uses `useTranslations` / `getTranslations`; no hardcoded copy anywhere.
 - The root layout (`src/app/[locale]/layout.tsx`) sets `<html lang dir>` — `dir="rtl"` for `fa`, `dir="ltr"` for `en`. Tailwind's `rtl:` / `ltr:` variants handle directional overrides.
@@ -124,6 +127,18 @@ Streaming variant (`streamMessage`) proxies OpenRouter SSE directly to the clien
 - Primary: `chunks` table with `match_chunks` RPC. Legacy fallback: `chatbot_documents` with `match_documents` RPC → final fallback: full-scan of `chatbot_documents`.
 - **Seeded knowledge**: 18-section 12-season color analysis KB is in `chatbot_documents` (metadata `seed: "color-kb-v1"`). Inserted without embeddings — only available via full-scan fallback until a `COHERE_API_KEY` (or other embedding provider) is added and documents are re-ingested through `src/app/api/chatbot/ingest/route.ts`.
 
+### SEO / discoverability
+
+- `src/app/sitemap.ts` and `src/app/robots.ts` — Next.js `MetadataRoute` files, generated at `/sitemap.xml` and `/robots.txt`. Sitemap lists public marketing paths for both locales; robots disallows `/api/`, `/admin`, `/dashboard`, `/auth/`.
+- `generateMetadata` in `src/app/[locale]/layout.tsx` sets `metadataBase`, `alternates.canonical`/`languages` (fa/en hreflang), and Google Search Console `verification.google`.
+- All of the above read `NEXT_PUBLIC_SITE_URL`, falling back to `https://beur.vercel.app` if unset.
+
+### Deployment (Vercel)
+
+- Project is linked via `.vercel/project.json` — org `nima-mohsenzadeh-s-projects`, project `beur`. Live at **https://beur.vercel.app** (no custom domain yet).
+- `.env.local` is **local-only** and is not synced to Vercel automatically. Production env vars must be set separately (`npx vercel env add <NAME> production` or the Vercel dashboard) — a missing prod var fails the build at prerender time with an opaque error (e.g. `@supabase/ssr: Your project's URL and API key are required`), not a clear "env var missing" message.
+- Pushing to `origin/master` (GitHub) and running `npx vercel --prod` are both valid deploy paths; keep them in sync.
+
 ### Environment variables
 
 `.env.local` — required:
@@ -135,6 +150,8 @@ NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...          # Service client (admin ops, bypasses RLS)
 TELEGRAM_BOT_TOKEN=...                 # Telegram webhook
+TELEGRAM_WEBHOOK_SECRET=...            # Telegram webhook signature check
+NEXT_PUBLIC_SITE_URL=...               # Canonical site URL for sitemap/robots/metadata (optional, defaults to beur.vercel.app)
 ```
 
 Future phases require: `STRIPE_SECRET_KEY`, `ZARINPAL_MERCHANT_ID`.
@@ -142,4 +159,4 @@ Future phases require: `STRIPE_SECRET_KEY`, `ZARINPAL_MERCHANT_ID`.
 ### Planned phases
 
 - **Phase 4** — Dual payment: Stripe (international) + Zarinpal (Iran).
-- **Phase 5** — Email confirmations, SEO, polish.
+- **Phase 5** — Email confirmations, polish. (SEO basics — sitemap/robots/hreflang/Search Console — already in place.)
