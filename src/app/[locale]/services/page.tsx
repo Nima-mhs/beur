@@ -1,6 +1,8 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { pageAlternates } from "@/lib/seo";
 
 type ServiceItem = {
   title: string;
@@ -60,6 +62,20 @@ function ServicesContent() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "servicesPage" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    alternates: pageAlternates(locale, "/services"),
+  };
 }
 
 export default async function ServicesPage({

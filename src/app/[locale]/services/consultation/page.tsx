@@ -1,6 +1,8 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { pageAlternates } from "@/lib/seo";
 
 type Step = { title: string; desc: string };
 
@@ -73,6 +75,20 @@ function ConsultationContent() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "consultationPage" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    alternates: pageAlternates(locale, "/services/consultation"),
+  };
 }
 
 export default async function ConsultationPage({
