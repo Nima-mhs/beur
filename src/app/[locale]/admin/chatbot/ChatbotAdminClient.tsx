@@ -879,6 +879,7 @@ function PromptTab({ auth }: { auth: string }) {
   const [editing, setEditing]   = useState<PromptVersion | null>(null);
   const [loading, setLoading]   = useState(true);
   const [saving, setSaving]     = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
   const [newV, setNewV]         = useState({ name: "", content: "", persona: "", welcome_msg: "" });
   const [creating, setCreating] = useState(false);
 
@@ -900,6 +901,27 @@ function PromptTab({ auth }: { auth: string }) {
       body: JSON.stringify({ action: "activate", id }),
     });
     setSaving(false);
+    load();
+  }
+
+  async function saveEdit() {
+    if (!editing || !editing.content.trim()) return;
+    setEditSaving(true);
+    await fetch("/api/admin/chatbot/prompt", {
+      method: "POST",
+      headers: { Authorization: auth, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "update",
+        id: editing.id,
+        name: editing.name,
+        content: editing.content,
+        persona: editing.persona,
+        welcome_msg: editing.welcome_msg,
+        quick_replies: editing.quick_replies,
+      }),
+    });
+    setEditSaving(false);
+    setEditing(null);
     load();
   }
 
@@ -1008,7 +1030,7 @@ function PromptTab({ auth }: { auth: string }) {
                   onClick={() => setEditing(v)}
                   className="text-xs btn-ghost !px-3 !py-1.5"
                 >
-                  مشاهده
+                  ویرایش
                 </button>
               </div>
             </div>
@@ -1020,12 +1042,45 @@ function PromptTab({ auth }: { auth: string }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="surface-card w-full max-w-2xl p-6 space-y-4 rounded-2xl max-h-[90vh] overflow-auto">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium text-ink">{editing.name}</h3>
+              <input
+                value={editing.name}
+                onChange={(e) => setEditing((v) => (v ? { ...v, name: e.target.value } : v))}
+                className="font-medium text-ink bg-transparent border-b border-sand outline-none flex-1 me-3"
+              />
               <button onClick={() => setEditing(null)} className="text-charcoal/50 hover:text-charcoal text-lg">✕</button>
             </div>
-            <pre className="text-sm text-charcoal/80 bg-sand/20 rounded-xl p-4 font-mono whitespace-pre-wrap overflow-auto">
-              {editing.content}
-            </pre>
+            <div>
+              <label className="block text-xs text-charcoal/60 mb-1">خلاصه پرسونا</label>
+              <input
+                value={editing.persona ?? ""}
+                onChange={(e) => setEditing((v) => (v ? { ...v, persona: e.target.value } : v))}
+                className="w-full rounded-xl border border-sand bg-paper px-3 py-2 text-sm outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-charcoal/60 mb-1">System Prompt *</label>
+              <textarea
+                value={editing.content}
+                onChange={(e) => setEditing((v) => (v ? { ...v, content: e.target.value } : v))}
+                rows={14}
+                className="w-full rounded-xl border border-sand bg-paper px-3 py-2 text-sm outline-none font-mono resize-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-charcoal/60 mb-1">پیام خوش‌آمد</label>
+              <textarea
+                value={editing.welcome_msg ?? ""}
+                onChange={(e) => setEditing((v) => (v ? { ...v, welcome_msg: e.target.value } : v))}
+                rows={3}
+                className="w-full rounded-xl border border-sand bg-paper px-3 py-2 text-sm outline-none resize-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setEditing(null)} className="btn-secondary flex-1">انصراف</button>
+              <button onClick={saveEdit} disabled={editSaving || !editing.content.trim()} className="btn-primary flex-1 disabled:opacity-50">
+                {editSaving ? "..." : "ذخیره تغییرات"}
+              </button>
+            </div>
           </div>
         </div>
       )}

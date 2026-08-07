@@ -31,6 +31,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
+  // Update an existing version in place
+  if (action === "update" && id) {
+    if (!content) return NextResponse.json({ error: "content required" }, { status: 400 });
+    const { error } = await sb
+      .from("prompt_versions")
+      .update({ name, content, persona, welcome_msg, quick_replies })
+      .eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    invalidateBrainCache();
+    return NextResponse.json({ success: true });
+  }
+
   // Create new version
   if (!content) return NextResponse.json({ error: "content required" }, { status: 400 });
 
