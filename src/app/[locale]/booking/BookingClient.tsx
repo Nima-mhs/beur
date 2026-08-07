@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -10,6 +10,18 @@ type Slot = {
   starts_at: string;
   duration_min: number;
   price_irr?: number;
+};
+
+type PaymentSettings = {
+  consultation_duration_min: number;
+  consultation_price_irr: number;
+  consultation_price_usd: number | null;
+  irr_bank_name: string | null;
+  irr_card_number: string | null;
+  irr_account_holder: string | null;
+  intl_card_brand: string | null;
+  intl_card_number: string | null;
+  intl_account_holder: string | null;
 };
 
 type Step = 1 | 2 | 3 | 4;
@@ -45,6 +57,7 @@ function StepIndicator({ step, t }: { step: Step; t: ReturnType<typeof useTransl
 function formatSlotDate(iso: string, locale: string) {
   const d = new Date(iso);
   return d.toLocaleString(locale === "fa" ? "fa-IR" : "en-GB", {
+    timeZone: "Asia/Tehran",
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -52,6 +65,34 @@ function formatSlotDate(iso: string, locale: string) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+// Calendar-day key (Tehran-local) used to bucket slots by day, independent of display locale.
+function tehranDateKey(d: Date) {
+  return d.toLocaleDateString("en-CA", { timeZone: "Asia/Tehran" });
+}
+
+function formatDayHeader(d: Date, locale: string) {
+  return d.toLocaleDateString(locale === "fa" ? "fa-IR" : "en-GB", {
+    timeZone: "Asia/Tehran",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+function formatSlotTime(iso: string, locale: string) {
+  return new Date(iso).toLocaleTimeString(locale === "fa" ? "fa-IR" : "en-GB", {
+    timeZone: "Asia/Tehran",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatWeekRange(start: Date, end: Date, locale: string) {
+  const loc = locale === "fa" ? "fa-IR" : "en-GB";
+  const opts: Intl.DateTimeFormatOptions = { timeZone: "Asia/Tehran", day: "numeric", month: "long" };
+  return `${start.toLocaleDateString(loc, opts)} – ${end.toLocaleDateString(loc, opts)}`;
 }
 
 export function BookingClient() {
@@ -68,6 +109,7 @@ export function BookingClient() {
 
   const [step, setStep] = useState<Step>(1);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+  const [weekOffset, setWeekOffset] = useState(0);
 
   // Step 2 — details
   const [fullName, setFullName] = useState("");
@@ -77,6 +119,7 @@ export function BookingClient() {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -95,6 +138,34 @@ export function BookingClient() {
       .then((d) => setSlots(d.slots ?? []))
       .finally(() => setSlotsLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetch("/api/payment-settings")
+      .then((r) => r.json())
+      .then((d) => setPaymentSettings(d.settings ?? null));
+  }, []);
+
+  const weekDays = useMemo(() => {
+    const todayKey = tehranDateKey(new Date());
+    const start = new Date(`${todayKey}T00:00:00Z`);
+    start.setUTCDate(start.getUTCDate() + weekOffset * 7);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setUTCDate(start.getUTCDate() + i);
+      return d;
+    });
+  }, [weekOffset]);
+
+  const slotsByDay = useMemo(() => {
+    const map: Record<string, Slot[]> = {};
+    for (const slot of slots) {
+      const key = tehranDateKey(new Date(slot.starts_at));
+      (map[key] ??= []).push(slot);
+    }
+    return map;
+  }, [slots]);
+
+  const weekHasSlots = weekDays.some((d) => (slotsByDay[tehranDateKey(d)] ?? []).length > 0);
 
   if (authLoading) {
     return (
@@ -153,7 +224,7 @@ export function BookingClient() {
       </section>
 
       <section className="container-content pb-20">
-        <div className="mx-auto max-w-xl">
+        <div className={`mx-auto ${step === 1 ? "max-w-5xl" : "max-w-xl"}`}>
           <StepIndicator step={step} t={t} />
 
           {/* Step 1 — choose slot */}
@@ -173,24 +244,62 @@ export function BookingClient() {
                   </a>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {slots.map((slot) => (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-2">
                     <button
-                      key={slot.id}
-                      onClick={() => { setSelectedSlot(slot); setStep(2); }}
-                      className="surface-card w-full p-5 text-start hover:ring-2 hover:ring-gold/40 transition-all"
+                      type="button"
+                      onClick={() => setWeekOffset((w) => Math.max(0, w - 1))}
+                      disabled={weekOffset === 0}
+                      className="btn-ghost !px-3 !py-1.5 text-xs sm:text-sm disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="font-medium text-ink">{formatSlotDate(slot.starts_at, locale)}</p>
-                          <p className="mt-1 text-xs text-charcoal/60">{t("slotDuration")}</p>
-                        </div>
-                        <span className="flex-shrink-0 rounded-full bg-ink text-gold text-xs px-3 py-1">
-                          {t("selectSlot")}
-                        </span>
-                      </div>
+                      {isFa ? "‹ هفته قبل" : "‹ Prev"}
                     </button>
-                  ))}
+                    <span className="text-xs sm:text-sm text-charcoal/70 font-medium">
+                      {formatWeekRange(weekDays[0], weekDays[6], locale)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setWeekOffset((w) => w + 1)}
+                      className="btn-ghost !px-3 !py-1.5 text-xs sm:text-sm"
+                    >
+                      {isFa ? "هفته بعد ›" : "Next ›"}
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 sm:grid sm:grid-cols-7 sm:overflow-visible sm:mx-0 sm:px-0">
+                    {weekDays.map((day) => {
+                      const key = tehranDateKey(day);
+                      const daySlots = slotsByDay[key] ?? [];
+                      const isToday = key === tehranDateKey(new Date());
+                      return (
+                        <div key={key} className="surface-card flex-shrink-0 w-[128px] sm:w-auto p-2.5 space-y-2">
+                          <div className={`text-center text-[11px] font-medium pb-2 border-b border-sand/40 ${isToday ? "text-gold-dark" : "text-ink"}`}>
+                            {formatDayHeader(day, locale)}
+                          </div>
+                          {daySlots.length === 0 ? (
+                            <p className="text-center text-xs text-charcoal/30 py-3">—</p>
+                          ) : (
+                            <div className="space-y-1.5">
+                              {daySlots.map((slot) => (
+                                <button
+                                  key={slot.id}
+                                  type="button"
+                                  onClick={() => { setSelectedSlot(slot); setStep(2); }}
+                                  className="w-full rounded-lg bg-sand/30 hover:bg-ink hover:text-gold text-ink text-xs font-medium py-2 transition-colors"
+                                >
+                                  {formatSlotTime(slot.starts_at, locale)}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {!weekHasSlots && (
+                    <p className="text-center text-sm text-charcoal/50 py-2">{t("noSlotsThisWeek")}</p>
+                  )}
                 </div>
               )}
             </div>
@@ -270,28 +379,79 @@ export function BookingClient() {
                 <h2 className="text-lg font-medium text-sand">{t("paymentTitle")}</h2>
                 <p className="text-sm text-sand/70">{t("paymentSubtitle")}</p>
 
-                <div className="rounded-xl bg-gold/10 border border-gold/30 p-4 space-y-2">
-                  <p className="text-gold font-semibold text-lg">{t("paymentAmount")}</p>
-                </div>
+                {!paymentSettings ? (
+                  <div className="flex justify-center py-4">
+                    <div className="h-6 w-6 border-2 border-sand border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : isFa ? (
+                  <>
+                    <div className="rounded-xl bg-gold/10 border border-gold/30 p-4 space-y-2">
+                      <p className="text-gold font-semibold text-lg">
+                        مبلغ: {(((selectedSlot?.price_irr ?? paymentSettings.consultation_price_irr) / 10)).toLocaleString("fa-IR")} تومان
+                      </p>
+                    </div>
 
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between items-center border-b border-sand/10 pb-2">
-                    <span className="text-sand/60">{isFa ? "بانک" : "Bank"}</span>
-                    <span className="text-sand font-medium">{t("bankName")}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-sand/10 pb-2">
-                    <span className="text-sand/60">{isFa ? "شماره کارت" : "Card"}</span>
-                    <span className="text-sand font-medium ltr" dir="ltr">{t("cardNumber")}</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-2">
-                    <span className="text-sand/60">{isFa ? "صاحب حساب" : "Account holder"}</span>
-                    <span className="text-sand font-medium">{t("accountHolder")}</span>
-                  </div>
-                </div>
+                    {paymentSettings.irr_card_number ? (
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between items-center border-b border-sand/10 pb-2">
+                          <span className="text-sand/60">بانک</span>
+                          <span className="text-sand font-medium">{paymentSettings.irr_bank_name}</span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-sand/10 pb-2">
+                          <span className="text-sand/60">شماره کارت</span>
+                          <span className="text-sand font-medium ltr" dir="ltr">{paymentSettings.irr_card_number}</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2">
+                          <span className="text-sand/60">صاحب حساب</span>
+                          <span className="text-sand font-medium">{paymentSettings.irr_account_holder}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-xl bg-sand/10 p-4 text-sm text-sand/70">
+                        اطلاعات واریز هنوز تنظیم نشده — لطفاً برای هماهنگی پرداخت با ما تماس بگیرید.
+                      </div>
+                    )}
 
-                <div className="rounded-xl bg-sand/10 p-3 text-xs text-sand/60">
-                  {t("paymentReceiptNote")}
-                </div>
+                    <div className="rounded-xl bg-sand/10 p-3 text-xs text-sand/60">
+                      {t("paymentReceiptNote")}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="rounded-xl bg-gold/10 border border-gold/30 p-4 space-y-2">
+                      <p className="text-gold font-semibold text-lg">
+                        {paymentSettings.consultation_price_usd != null
+                          ? `Amount: $${paymentSettings.consultation_price_usd}`
+                          : "Amount: contact us for pricing"}
+                      </p>
+                    </div>
+
+                    {paymentSettings.intl_card_number ? (
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between items-center border-b border-sand/10 pb-2">
+                          <span className="text-sand/60">Card</span>
+                          <span className="text-sand font-medium">{paymentSettings.intl_card_brand}</span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-sand/10 pb-2">
+                          <span className="text-sand/60">Number</span>
+                          <span className="text-sand font-medium ltr" dir="ltr">{paymentSettings.intl_card_number}</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2">
+                          <span className="text-sand/60">Account holder</span>
+                          <span className="text-sand font-medium">{paymentSettings.intl_account_holder}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-xl bg-sand/10 p-4 text-sm text-sand/70">
+                        International payment isn&apos;t set up yet — please contact us to arrange payment.
+                      </div>
+                    )}
+
+                    <div className="rounded-xl bg-sand/10 p-3 text-xs text-sand/60">
+                      {t("paymentReceiptNote")}
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Add receipt note to notes */}

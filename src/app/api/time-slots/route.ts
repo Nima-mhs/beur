@@ -10,7 +10,7 @@ export async function GET() {
     .eq("available", true)
     .gte("starts_at", new Date().toISOString())
     .order("starts_at", { ascending: true })
-    .limit(20);
+    .limit(500);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
