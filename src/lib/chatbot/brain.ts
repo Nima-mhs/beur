@@ -261,27 +261,41 @@ export async function streamMessage(input: BrainInput): Promise<ReadableStream<U
     { role: "user", content: message },
   ];
 
-  const bodyPayload = {
-    model: cfg.active_model,
-    temperature: cfg.temperature,
-    max_tokens: cfg.max_tokens,
-    top_p: cfg.top_p,
-    stream: true,
-    messages: [{ role: "system", content: systemPrompt }, ...oaMessages],
-  };
-
   const encoder = new TextEncoder();
 
-  const upstreamRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://beurseason.com",
-      "X-Title": "BEUR SEASON Assistant",
-    },
-    body: JSON.stringify(bodyPayload),
-  });
+  async function callStreaming(model: string) {
+    return fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://beurseason.com",
+        "X-Title": "BEUR SEASON Assistant",
+      },
+      body: JSON.stringify({
+        model,
+        temperature: cfg.temperature,
+        max_tokens: cfg.max_tokens,
+        top_p: cfg.top_p,
+        stream: true,
+        messages: [{ role: "system", content: systemPrompt }, ...oaMessages],
+      }),
+    });
+  }
+
+  let modelUsed = cfg.active_model;
+  let upstreamRes = await callStreaming(cfg.active_model);
+
+  if (!upstreamRes.ok) {
+    console.error(`[brain] Primary model ${cfg.active_model} failed (stream):`, upstreamRes.status, await upstreamRes.text());
+    if (cfg.fallback_model) {
+      modelUsed = cfg.fallback_model;
+      upstreamRes = await callStreaming(cfg.fallback_model);
+      if (!upstreamRes.ok) {
+        console.error(`[brain] Fallback model ${cfg.fallback_model} failed (stream):`, upstreamRes.status, await upstreamRes.text());
+      }
+    }
+  }
 
   if (!upstreamRes.ok || !upstreamRes.body) {
     const fallback = locale === "fa" ? "خطا در ارتباط با سرور." : "Server error.";
@@ -339,7 +353,7 @@ export async function streamMessage(input: BrainInput): Promise<ReadableStream<U
             { role: "assistant" as const, content: fullReply },
           ];
           await saveSession(sessionId, newMessages).catch(() => undefined);
-          await logMessage(sessionId, message, fullReply, cfg.active_model, ragResult.chunk_ids, surface).catch(() => undefined);
+          await logMessage(sessionId, message, fullReply, modelUsed, ragResult.chunk_ids, surface).catch(() => undefined);
         }
       }
     },
