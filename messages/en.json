@@ -82,12 +82,6 @@
     "statement": "The only Persian-speaking beauty consultant who builds your personal palette with the science of the color cycle and Color Season.",
     "uvp": "For beauty seekers and professionals who want smart beauty decisions — where color science and beauty meet."
   },
-  "aboutTeaser": {
-    "eyebrow": "About me",
-    "title": "An expert who tells the truth",
-    "body": "Using color science and data-driven analysis, I help you choose colors truly made for you — not what merely looked good on someone else. My full story and résumé will live here soon.",
-    "cta": "Learn more"
-  },
   "ctaBanner": {
     "title": "Discover your color season",
     "subtitle": "Book your private consultation today.",
@@ -105,13 +99,15 @@
   "about": {
     "eyebrow": "About me",
     "title": "Meet your consultant",
-    "intro": "This page will soon be completed with a photo, story and full résumé. For now, it's a placeholder.",
+    "intro": "This page will soon be completed with a full story and résumé.",
+    "photoAlt": "Color consultant, founder of BEUR SEASON",
     "placeholderTitle": "What will live here?",
     "placeholderItems": [
       "Professional photo and a short introduction",
       "Expertise path and Color Analysis certifications",
       "Work philosophy: color science, honesty, empowerment"
     ],
+    "resumeTitle": "Résumé & expertise",
     "missionTitle": "My mission",
     "mission": "To empower individuals and beauty businesses through data-driven analysis and expert consulting — so every choice is smart, informed and effective.",
     "cta": "Book a consultation"
@@ -288,10 +284,6 @@
     "back": "Back",
     "paymentTitle": "Payment details",
     "paymentSubtitle": "Transfer the amount below to the bank account shown.",
-    "paymentAmount": "Amount: 500,000 IRT",
-    "bankName": "Bank Mellat",
-    "cardNumber": "Card: 6104-3372-0000-0000",
-    "accountHolder": "Account holder: BEUR SEASON",
     "paymentReceiptNote": "After transferring, enter your transaction ID in the notes field.",
     "iHavePaid": "I've paid — confirm my booking",
     "submitting": "Saving your booking...",
@@ -302,7 +294,8 @@
     "loginRequired": "Please sign in to book a consultation.",
     "loginToBook": "Sign in / Register to book",
     "service": "Personal Color Consultation",
-    "selectedTime": "Selected time"
+    "selectedTime": "Selected time",
+    "noSlotsThisWeek": "No slots available this week — check next week."
   },
   "dashboard": {
     "title": "My Account",
