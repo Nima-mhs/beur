@@ -59,11 +59,13 @@ create table if not exists public.chatbot_leads (
   created_at timestamptz default now()
 );
 
--- Disable RLS on chatbot tables (accessed via service role / anon)
-alter table public.chatbot_documents disable row level security;
-alter table public.chat_sessions     disable row level security;
-alter table public.chat_memory       disable row level security;
-alter table public.chatbot_leads     disable row level security;
+-- RLS enabled: these tables are only ever accessed via the service role
+-- client (getServiceClient), which always bypasses RLS. No anon/authenticated
+-- policies are needed since the app never queries them with those roles.
+alter table public.chatbot_documents enable row level security;
+alter table public.chat_sessions     enable row level security;
+alter table public.chat_memory       enable row level security;
+alter table public.chatbot_leads     enable row level security;
 
 -- 5. Vector similarity search RPC
 create or replace function public.match_documents(

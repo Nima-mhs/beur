@@ -23,7 +23,7 @@ create table if not exists public.documents (
   created_at  timestamptz default now()
 );
 
-alter table public.documents disable row level security;
+alter table public.documents enable row level security;
 
 -- ─── 2. CHUNKS (actual RAG content with embeddings) ──────────────────────────
 -- Default vector dim = 1024 (Cohere/Voyage).
@@ -40,7 +40,7 @@ create table if not exists public.chunks (
   created_at   timestamptz default now()
 );
 
-alter table public.chunks disable row level security;
+alter table public.chunks enable row level security;
 
 create index if not exists chunks_doc_idx
   on public.chunks (document_id);
@@ -63,7 +63,7 @@ create table if not exists public.conversations (
   updated_at       timestamptz default now()
 );
 
-alter table public.conversations disable row level security;
+alter table public.conversations enable row level security;
 
 create index if not exists conversations_session_idx on public.conversations (session_id);
 create index if not exists conversations_channel_idx on public.conversations (channel);
@@ -84,7 +84,7 @@ create table if not exists public.messages (
   created_at          timestamptz default now()
 );
 
-alter table public.messages disable row level security;
+alter table public.messages enable row level security;
 
 create index if not exists messages_conv_idx on public.messages (conversation_id);
 create index if not exists messages_role_idx on public.messages (role);
@@ -103,7 +103,7 @@ create table if not exists public.unified_users (
   constraint unified_users_uq unique (channel, external_id)
 );
 
-alter table public.unified_users disable row level security;
+alter table public.unified_users enable row level security;
 
 -- ─── 6. FEEDBACK ─────────────────────────────────────────────────────────────
 create table if not exists public.feedback (
@@ -115,7 +115,7 @@ create table if not exists public.feedback (
   created_at     timestamptz default now()
 );
 
-alter table public.feedback disable row level security;
+alter table public.feedback enable row level security;
 
 -- ─── 7. PROMPT VERSIONS ──────────────────────────────────────────────────────
 create table if not exists public.prompt_versions (
@@ -130,7 +130,7 @@ create table if not exists public.prompt_versions (
   created_by   text
 );
 
-alter table public.prompt_versions disable row level security;
+alter table public.prompt_versions enable row level security;
 
 -- ─── 8. MODEL CONFIG ─────────────────────────────────────────────────────────
 create table if not exists public.model_config (
@@ -150,7 +150,7 @@ create table if not exists public.model_config (
   constraint model_config_channel_uq unique (channel)
 );
 
-alter table public.model_config disable row level security;
+alter table public.model_config enable row level security;
 
 -- ─── 9. EMBEDDING CONFIG ─────────────────────────────────────────────────────
 create table if not exists public.embedding_config (
@@ -170,7 +170,7 @@ create table if not exists public.embedding_config (
   updated_at          timestamptz default now()
 );
 
-alter table public.embedding_config disable row level security;
+alter table public.embedding_config enable row level security;
 
 -- ─── 10. ADMIN USERS ─────────────────────────────────────────────────────────
 create table if not exists public.admin_users (
@@ -181,7 +181,7 @@ create table if not exists public.admin_users (
   created_at timestamptz default now()
 );
 
-alter table public.admin_users disable row level security;
+alter table public.admin_users enable row level security;
 
 -- ─── 11. AUDIT LOG ───────────────────────────────────────────────────────────
 create table if not exists public.audit_log (
@@ -193,7 +193,7 @@ create table if not exists public.audit_log (
   created_at    timestamptz default now()
 );
 
-alter table public.audit_log disable row level security;
+alter table public.audit_log enable row level security;
 
 -- ─── 12. RATE LIMIT TRACKING (Telegram) ──────────────────────────────────────
 create table if not exists public.rate_limits (
@@ -204,7 +204,7 @@ create table if not exists public.rate_limits (
   constraint rate_limits_uq unique (identifier, window_start)
 );
 
-alter table public.rate_limits disable row level security;
+alter table public.rate_limits enable row level security;
 
 -- ─── RPC FUNCTIONS ───────────────────────────────────────────────────────────
 
@@ -293,7 +293,7 @@ on conflict do nothing;
 insert into public.prompt_versions (name, content, persona, is_active, welcome_msg, quick_replies)
 values (
   'default',
-  E'تو یک دستیار هوشمند فارسی‌زبان برای مجموعه BEUR SEASON هستی — اولین سرویس مشاوره زیبایی داده‌محور فارسی‌زبان.\n\nشخصیت: متخصص مطمئن، صادق، گرم و توانمندساز. مثل یک دوست متخصص که راستش را می‌گوید.\nخطاب: همیشه «شما»\nزبان: فارسی (مگر کاربر به انگلیسی بنویسد)\n\nوظایف اصلی:\n- پاسخ به سوالات درباره خدمات BEUR SEASON، رزرو، قیمت و تحلیل رنگ\n- راهنمایی در زمینه Color Season، زیرتُن پوست و انتخاب رنگ\n- هدایت کاربر به ثبت درخواست مشاوره (ابزار capture_lead)\n- بررسی وضعیت رزرو (ابزار check_enrollment_status)\n\nقوانین:\n- پاسخ‌ها را کوتاه و مفید نگه دار (۲-۳ پاراگراف)\n- هرگز اطلاعات نادرست یا ساختگی ندهید\n- مشاوره تخصصی قطعی ندهید؛ هدف راهنمایی و هدایت کاربر به مشاوره واقعی است\n- اگر سوال خارج از حوزه زیبایی/BEUR SEASON است، مودبانه راهنمایی کن\n- اطلاعات از پایگاه دانش:\n{RAG_CONTEXT}\n- حافظه این کاربر:\n{LONG_TERM_MEMORY}',
+  E'تو یک دستیار هوشمند فارسی‌زبان برای مجموعه BEUR SEASON هستی — اولین سرویس مشاوره زیبایی داده‌محور فارسی‌زبان.\n\nشخصیت: متخصص مطمئن، صادق، گرم و توانمندساز. مثل یک دوست متخصص که راستش را می‌گوید.\nخطاب: همیشه «شما»\nزبان: فارسی (مگر کاربر به انگلیسی بنویسد)\n\nوظایف اصلی:\n- پاسخ به سوالات درباره خدمات BEUR SEASON، رزرو، قیمت و تحلیل رنگ\n- راهنمایی در زمینه Color Season، زیرتُن پوست و انتخاب رنگ\n- هدایت کاربر به ثبت درخواست مشاوره (ابزار capture_lead)\n- بررسی وضعیت رزرو (ابزار check_enrollment_status)\n\nقوانین:\n- پاسخ‌ها را کوتاه و مفید نگه دار (۲-۳ پاراگراف)\n- هرگز اطلاعات نادرست یا ساختگی ندهید\n- هرگز عدد قیمت یا مبلغ دقیق بیان نکن مگر اینکه عیناً در پایگاه دانش (RAG_CONTEXT) زیر آمده باشد؛ اگر قیمت آنجا نبود، بگو قیمت بسته به نوع خدمت و نیاز مشتری متفاوت است و کاربر را برای دریافت قیمت دقیق به رزرو مشاوره یا تماس با تیم هدایت کن — هرگز عدد حدسی نساز\n- هرگز شماره حساب بانکی، مبلغ واریزی یا هر نوع دستورالعمل پرداخت ارائه نده — این مجموعه فعلاً درگاه پرداخت آنلاین ندارد؛ برای هرگونه پرداخت، کاربر را به تیم پشتیبانی یا فرآیند رزرو ارجاع بده\n- مشاوره تخصصی قطعی ندهید؛ هدف راهنمایی و هدایت کاربر به مشاوره واقعی است\n- اگر سوال خارج از حوزه زیبایی/BEUR SEASON است، مودبانه راهنمایی کن\n- اطلاعات از پایگاه دانش:\n{RAG_CONTEXT}\n- حافظه این کاربر:\n{LONG_TERM_MEMORY}',
   'دستیار تخصصی زیبایی BEUR SEASON',
   true,
   'سلام! به BEUR SEASON خوش آمدید 🌸\n\nمن دستیار هوشمند شما هستم و می‌توانم در موارد زیر کمک کنم:\n• تحلیل رنگ فصلی و زیرتُن پوست\n• رزرو مشاوره\n• قیمت خدمات\n\nچه سوالی دارید؟',
