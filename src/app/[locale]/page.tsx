@@ -4,7 +4,6 @@ import { Values } from "@/components/sections/Values";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ColorAnalysisDemo } from "@/components/sections/ColorAnalysisDemo";
 import { Positioning } from "@/components/sections/Positioning";
-import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 
 export default async function HomePage({
@@ -22,7 +21,6 @@ export default async function HomePage({
       <ColorAnalysisDemo />
       <ServicesPreview />
       <Positioning />
-      <AboutTeaser />
       <CtaBanner />
     </>
   );
