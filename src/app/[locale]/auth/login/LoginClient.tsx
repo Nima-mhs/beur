@@ -11,12 +11,18 @@ function ForgotPasswordLink() {
   const [sent, setSent] = useState(false);
   const [email, setEmail] = useState("");
   const [show, setShow] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleForgot(e: React.FormEvent) {
     e.preventDefault();
-    await supabase.auth.resetPasswordForEmail(email, {
+    setError(null);
+    const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback`,
     });
+    if (err) {
+      setError(err.message);
+      return;
+    }
     setSent(true);
   }
 
@@ -33,17 +39,20 @@ function ForgotPasswordLink() {
   }
 
   return (
-    <form onSubmit={handleForgot} className="flex gap-1 items-center">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="ایمیل شما"
-        required
-        dir="ltr"
-        className="rounded-lg border border-sand bg-paper px-2 py-1 text-xs text-ink outline-none focus:ring-1 focus:ring-gold/40 w-36"
-      />
-      <button type="submit" className="text-xs link-accent">ارسال</button>
+    <form onSubmit={handleForgot} className="flex flex-col gap-1 items-end">
+      <div className="flex gap-1 items-center">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="ایمیل شما"
+          required
+          dir="ltr"
+          className="rounded-lg border border-sand bg-paper px-2 py-1 text-xs text-ink outline-none focus:ring-1 focus:ring-gold/40 w-36"
+        />
+        <button type="submit" className="text-xs link-accent">ارسال</button>
+      </div>
+      {error && <span className="text-xs text-red-600">{error}</span>}
     </form>
   );
 }
@@ -68,7 +77,13 @@ export function LoginClient() {
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
 
     if (err) {
-      setError(err.message.includes("Invalid") ? (isFa ? "ایمیل یا رمز عبور اشتباه است." : "Incorrect email or password.") : t("error"));
+      if (err.message.includes("Invalid")) {
+        setError(isFa ? "ایمیل یا رمز عبور اشتباه است." : "Incorrect email or password.");
+      } else if (err.message.includes("Email not confirmed")) {
+        setError(isFa ? "ایمیل شما هنوز تأیید نشده است. صندوق ایمیل (و پوشه اسپم) را بررسی کنید." : "Your email is not confirmed yet. Check your inbox (and spam folder).");
+      } else {
+        setError(t("error"));
+      }
       setLoading(false);
       return;
     }

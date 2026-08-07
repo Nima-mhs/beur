@@ -103,8 +103,12 @@ export function ColorAnalysisDemo() {
         <div className="mt-14 grid items-center gap-10 md:grid-cols-2 md:gap-16">
           {/* Phone mockup */}
           <div className="flex justify-center">
-            <div className="relative w-72 sm:w-80">
-              <div className="relative overflow-hidden rounded-[2.5rem] border border-sand/10 bg-[#111] shadow-2xl shadow-black/60">
+            <Link
+              href="/color-analysis"
+              aria-label={t("cta")}
+              className="group relative block w-72 cursor-pointer sm:w-80"
+            >
+              <div className="relative overflow-hidden rounded-[2.5rem] border border-sand/10 bg-[#111] shadow-2xl shadow-black/60 transition-all duration-300 group-hover:scale-[1.02] group-hover:border-gold/40 group-hover:shadow-gold/10">
                 <div className="flex items-center justify-between px-6 pt-4 pb-2">
                   <span className="text-[10px] text-sand/30">9:41</span>
                   <div className="h-5 w-24 rounded-full bg-black/60 border border-sand/10" />
@@ -167,7 +171,7 @@ export function ColorAnalysisDemo() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Season cards */}

@@ -45,10 +45,13 @@ export function Hero() {
         {/* Brand card */}
         <div className="animate-fade-up [animation-delay:120ms]">
           <div className="surface-dark relative mx-auto max-w-md p-10 text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 flex-col items-center justify-center rounded-full border border-gold/60 text-gold">
-              <span className="text-sm font-bold tracking-[0.2em]">BEUR</span>
-              <span className="my-1 block h-px w-8 bg-gold/70" />
-              <span className="text-[10px] font-light tracking-[0.35em]">SEASON</span>
+            <div className="relative mx-auto mb-6 h-24 w-24">
+              <span className="orbit-ring" aria-hidden />
+              <div className="relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full border border-gold/60 text-gold">
+                <span className="text-sm font-bold tracking-[0.2em]">BEUR</span>
+                <span className="my-1 block h-px w-8 bg-gold/70" />
+                <span className="text-[10px] font-light tracking-[0.35em]">SEASON</span>
+              </div>
             </div>
             <p className="font-display text-2xl text-gold">{brand("tagline")}</p>
             <p className="mt-2 text-sm text-sand/70">{brand("taglineFa")}</p>
