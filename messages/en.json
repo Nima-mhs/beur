@@ -253,6 +253,8 @@
     "fullName": "Full name",
     "phone": "Mobile number (optional)",
     "passwordConfirm": "Confirm password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "registerBtn": "Create account",
     "registering": "Creating account...",
     "hasAccount": "Already have an account?",

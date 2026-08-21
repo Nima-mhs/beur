@@ -253,6 +253,8 @@
     "fullName": "نام و نام خانوادگی",
     "phone": "شماره موبایل (اختیاری)",
     "passwordConfirm": "تکرار رمز عبور",
+    "showPassword": "نمایش رمز عبور",
+    "hidePassword": "پنهان کردن رمز عبور",
     "registerBtn": "ثبت‌نام",
     "registering": "در حال ثبت‌نام...",
     "hasAccount": "حساب دارید؟",
