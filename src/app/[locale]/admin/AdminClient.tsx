@@ -329,11 +329,15 @@ export function AdminClient() {
   }
 
   async function deleteSlot(id: string) {
-    await fetch("/api/admin/slots", {
+    const res = await fetch("/api/admin/slots", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: null }));
+      alert(error ?? "حذف زمان انجام نشد.");
+    }
     fetchSlots();
   }
 

@@ -18,9 +18,33 @@ export async function GET() {
   const admin = await checkAdmin();
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { data, error } = await getServiceClient()
+  const db = getServiceClient();
+  const now = new Date().toISOString();
+
+  // Auto-cleanup: past slots are useless for booking, so drop them. Slots
+  // still referenced by a booking (bookings.slot_id FK, no cascade) are kept
+  // for booking history but hidden from this list.
+  const { data: pastSlots } = await db
+    .from("time_slots")
+    .select("id")
+    .lt("starts_at", now);
+  const pastIds = (pastSlots ?? []).map((s) => s.id);
+  if (pastIds.length > 0) {
+    const { data: referenced } = await db
+      .from("bookings")
+      .select("slot_id")
+      .in("slot_id", pastIds);
+    const referencedIds = new Set((referenced ?? []).map((b) => b.slot_id));
+    const deletable = pastIds.filter((id) => !referencedIds.has(id));
+    if (deletable.length > 0) {
+      await db.from("time_slots").delete().in("id", deletable);
+    }
+  }
+
+  const { data, error } = await db
     .from("time_slots")
     .select("*")
+    .gte("starts_at", now)
     .order("starts_at", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -51,7 +75,20 @@ export async function DELETE(request: NextRequest) {
   const { id } = await request.json();
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 
-  const { error } = await getServiceClient()
+  const db = getServiceClient();
+
+  const { count } = await db
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("slot_id", id);
+  if (count && count > 0) {
+    return NextResponse.json(
+      { error: "این زمان به یک رزرو (حتی لغوشده) متصل است و قابل حذف نیست." },
+      { status: 409 },
+    );
+  }
+
+  const { error } = await db
     .from("time_slots")
     .delete()
     .eq("id", id);
